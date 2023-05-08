@@ -1,10 +1,22 @@
-import { link } from "../assets";
-import { useState } from "react";
+import { link, copy } from "../assets";
+import { useState, useEffect } from "react";
 import { useLazyGetSummaryQuery } from "../services/article";
 
 function SummaryView() {
   const [article, setArticle] = useState({ url: "", summary: "" });
   const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
+  const [allArticles, setAllArticles] = useState([]);
+
+  //To obtain previous articles from local storage if exist
+  useEffect(() => {
+    const articlesFromLocalStorage = JSON.parse(
+      window.localStorage.getItem("articles")
+    );
+
+    if (articlesFromLocalStorage) {
+      setAllArticles(articlesFromLocalStorage);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,9 +25,17 @@ function SummaryView() {
     });
     if (data?.summary) {
       const newArticle = { ...article, summary: data.summary };
+      //For keeping track of the old articles
+      const updatedAllArticles = [newArticle, ...allArticles];
 
       setArticle(newArticle);
-      console.log(newArticle);
+      setAllArticles(updatedAllArticles);
+
+      //To store the article in local storage
+      window.localStorage.setItem(
+        "articles",
+        JSON.stringify(updatedAllArticles)
+      );
     }
   };
 
@@ -47,6 +67,27 @@ function SummaryView() {
             ⤶
           </button>
         </form>
+        {/* Article History */}
+        <div className="flex flex-col gap-1 max-h-60 overflow-y-auto">
+          {allArticles.map((item, index) => (
+            <div
+              key={`link-${index}`}
+              onClick={() => setArticle(item)}
+              className="link_card"
+            >
+              <div className="copy_btn">
+                <img
+                  src={copy}
+                  alt="copy_icon"
+                  className="w-[40%] h-[40%] object-contain"
+                />
+              </div>
+              <p className="flex-1 font-satoshi text-blue-700 font-medium text-sm truncate">
+                {item.url}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
