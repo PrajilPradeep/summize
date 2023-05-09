@@ -7,10 +7,10 @@ const App = () => {
     <main>
       <div className="main">
         <div className="gradient" />
-        <div className="app">
-          <PageHeader />
-          <SummaryView />
-        </div>
+      </div>
+      <div className="app">
+        <PageHeader />
+        <SummaryView />
       </div>
     </main>
   );
