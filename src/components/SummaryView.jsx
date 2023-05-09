@@ -1,4 +1,4 @@
-import { link, copy, loader } from "../assets";
+import { link, copy, loader, tick } from "../assets";
 import { useState, useEffect } from "react";
 import { useLazyGetSummaryQuery } from "../services/article";
 
@@ -6,6 +6,7 @@ function SummaryView() {
   const [article, setArticle] = useState({ url: "", summary: "" });
   const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
   const [allArticles, setAllArticles] = useState([]);
+  const [copied, setCopied] = useState("");
 
   //To obtain previous articles from local storage if exist
   useEffect(() => {
@@ -37,6 +38,13 @@ function SummaryView() {
         JSON.stringify(updatedAllArticles)
       );
     }
+  };
+
+  const handleCopy = (url) => {
+    console.log(url);
+    setCopied(url);
+    navigator.clipboard.writeText(url);
+    setTimeout(() => setCopied(""), 1000);
   };
 
   return (
@@ -75,9 +83,9 @@ function SummaryView() {
               onClick={() => setArticle(item)}
               className="link_card"
             >
-              <div className="copy_btn">
+              <div className="copy_btn" onClick={() => handleCopy(item.url)}>
                 <img
-                  src={copy}
+                  src={copied === item.url ? tick : copy}
                   alt="copy_icon"
                   className="w-[40%] h-[40%] object-contain"
                 />
