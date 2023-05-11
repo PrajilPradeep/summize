@@ -4,7 +4,8 @@ import { useLazyGetSummaryQuery } from "../services/article";
 
 function SummaryView() {
   const [article, setArticle] = useState({ url: "", summary: "" });
-  const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
+  const [error, setError] = useState("");
+  const [getSummary, { isFetching }] = useLazyGetSummaryQuery();
   const [allArticles, setAllArticles] = useState([]);
   const [copied, setCopied] = useState("");
 
@@ -21,27 +22,31 @@ function SummaryView() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data } = await getSummary({
-      articleUrl: article.url,
-    });
-    if (data?.summary) {
-      const newArticle = { ...article, summary: data.summary };
-      //For keeping track of the old articles
-      const updatedAllArticles = [newArticle, ...allArticles];
+    try {
+      const data = await getSummary({
+        articleUrl: article.url,
+      }).unwrap();
 
-      setArticle(newArticle);
-      setAllArticles(updatedAllArticles);
+      if (data?.summary) {
+        const newArticle = { ...article, summary: data.summary };
+        //For keeping track of the old articles
+        const updatedAllArticles = [newArticle, ...allArticles];
 
-      //To store the article in local storage
-      window.localStorage.setItem(
-        "articles",
-        JSON.stringify(updatedAllArticles)
-      );
+        setArticle(newArticle);
+        setAllArticles(updatedAllArticles);
+
+        //To store the article in local storage
+        window.localStorage.setItem(
+          "articles",
+          JSON.stringify(updatedAllArticles)
+        );
+      }
+    } catch (error) {
+      setError(error);
     }
   };
 
   const handleCopy = (url) => {
-    console.log(url);
     setCopied(url);
     navigator.clipboard.writeText(url);
     setTimeout(() => setCopied(""), 1000);
@@ -80,7 +85,10 @@ function SummaryView() {
           {allArticles.map((item, index) => (
             <div
               key={`link-${index}`}
-              onClick={() => setArticle(item)}
+              onClick={() => {
+                setError(null); //clear any previous errors
+                setArticle(item);
+              }}
               className="link_card"
             >
               <div className="copy_btn" onClick={() => handleCopy(item.url)}>
