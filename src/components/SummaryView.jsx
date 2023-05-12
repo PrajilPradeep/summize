@@ -1,27 +1,22 @@
 import { link, copy, tick } from "../assets";
-import { useState, useEffect } from "react";
-import { useLazyGetSummaryQuery } from "../services/article";
+import { useState } from "react";
 import Loader from "./Loader";
 import ErrorMessage from "./ErrorMessage";
 import Summary from "./Summary";
+import useArticle from "../hooks/useArticle";
 
 function SummaryView() {
   const [article, setArticle] = useState({ url: "", summary: "" });
   const [error, setError] = useState("");
-  const [getSummary, { isFetching }] = useLazyGetSummaryQuery();
-  const [allArticles, setAllArticles] = useState([]);
-  const [copied, setCopied] = useState("");
 
-  //To obtain previous articles from local storage if exist
-  useEffect(() => {
-    const articlesFromLocalStorage = JSON.parse(
-      window.localStorage.getItem("articles")
-    );
-
-    if (articlesFromLocalStorage) {
-      setAllArticles(articlesFromLocalStorage);
-    }
-  }, []);
+  const {
+    getSummary,
+    isFetching,
+    setAllArticles,
+    allArticles,
+    handleCopy,
+    copied,
+  } = useArticle();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,7 +27,7 @@ function SummaryView() {
 
       if (data?.summary) {
         const newArticle = { ...article, summary: data.summary };
-        //For keeping track of the old articles
+        //To keep track of the previous articles
         const updatedAllArticles = [newArticle, ...allArticles];
 
         setArticle(newArticle);
@@ -47,12 +42,6 @@ function SummaryView() {
     } catch (error) {
       setError(error);
     }
-  };
-
-  const handleCopy = (url) => {
-    setCopied(url);
-    navigator.clipboard.writeText(url);
-    setTimeout(() => setCopied(""), 1000);
   };
 
   return (
