@@ -1,6 +1,9 @@
-import { link, copy, loader, tick } from "../assets";
+import { link, copy, tick } from "../assets";
 import { useState, useEffect } from "react";
 import { useLazyGetSummaryQuery } from "../services/article";
+import Loader from "./Loader";
+import ErrorMessage from "./ErrorMessage";
+import Summary from "./Summary";
 
 function SummaryView() {
   const [article, setArticle] = useState({ url: "", summary: "" });
@@ -108,33 +111,11 @@ function SummaryView() {
       {/* Display Summary */}
       <div className="my-10 max-w-full flex justify-center items-center">
         {isFetching ? (
-          <img
-            src={loader}
-            alt="loading_icon"
-            className="w-20 h-20 object-contain"
-          />
+          <Loader />
         ) : error ? (
-          <p className="font-inter font-bold text-black text-center">
-            An Error Occurred! <br />
-            <span className="font-satoshi font-normal text-grey-700">
-              {error?.data?.error}
-            </span>
-          </p>
+          <ErrorMessage error={error} />
         ) : (
-          article.summary && (
-            <div className="flex flex-col  gap-4">
-              <h2 className="font-satoshi font-bold text-gray-600 text-xl">
-                <span className="article_summary_gradient">
-                  Article Summary
-                </span>
-              </h2>
-              <div className="summary_box">
-                <p className="font-inter font-medium text-sm text-gray-900">
-                  {article.summary}
-                </p>
-              </div>
-            </div>
-          )
+          article.summary && <Summary summary={article.summary} />
         )}
       </div>
     </section>
