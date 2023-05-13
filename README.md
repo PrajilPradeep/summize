@@ -29,7 +29,6 @@ To run this project locally, you need to have Node.js and npm installed on your 
 
 To use Summize, you just need to enter the URL of any web article in the input field and submit it. The app will then display the extracted summary of the article.
 
-Example:
 ![Summize_Demo](https://github.com/PrajilPradeep/summize/assets/93212835/e82cf445-c37a-428d-b9b4-6d6a9e71ff93)
 
 ## Live site
