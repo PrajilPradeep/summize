@@ -15,6 +15,14 @@ Summize has the following features:
 - **History list**: You can view the previously fetched articles from local storage.
 - **Copy URL**: You can copy the previously used URL to go to the original page by clicking on the "Copy URL" button from the history list.
 
+## Technologies
+
+- React
+- Vite
+- Tailwind CSS
+- Redux Toolkit Query
+- React Hook Form
+
 ## Installation / How to setup
 
 To run this project locally, you need to have Node.js and npm installed on your machine.
@@ -25,9 +33,9 @@ To run this project locally, you need to have Node.js and npm installed on your 
 4. Start the development server: `npm run dev`
 5. Open http://localhost:5173 in your browser
 
-## Quick start code example
+## Usage
 
-To use Summize, you just need to enter the URL of any web article in the input field and submit it. The app will then display the extracted summary of the article.
+To use Summize, you just need to paste an article link in the input field and click the submit button. The app will fetch the summary from the API and display it below. You can view the history of previous summaries by scrolling down the page. The summaries are stored in local storage, so you can access them even after closing the app.
 
 ![Summize_Demo](https://github.com/PrajilPradeep/summize/assets/93212835/e82cf445-c37a-428d-b9b4-6d6a9e71ff93)
 
