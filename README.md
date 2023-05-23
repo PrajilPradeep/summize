@@ -20,8 +20,8 @@ Summize has the following features:
 - React
 - Vite
 - Tailwind CSS
-- Redux Toolkit Query
-- React Hook Form
+- Redux Toolkit
+- React Hook 
 
 ## Installation / How to setup
 
